@@ -10,6 +10,9 @@ import os
 from decimal    import Decimal
 from datetime   import datetime
 from dateutil.relativedelta import relativedelta
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from eve_buddy_link_bot_classes import Base, Yaml
 
 logging.basicConfig(format='%(asctime)s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -18,6 +21,8 @@ logging.basicConfig(format='%(asctime)s %(message)s',
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
 _sleeptime = 60
+_engine = None
+_Session = None
 
 def readYamlFile(path):
     with open(path, 'r') as infile:
@@ -26,6 +31,27 @@ def readYamlFile(path):
 def writeYamlFile(yaml_object, path):
         with open(path, 'w') as outfile:
            outfile.write( yaml.dump(yaml_object, default_flow_style=False ))
+        writeYamlDatabase(path)
+
+def writeYamlDatabase(path):
+    	if os.environ.get('DATABASE_URL') is None:
+    		logging.info('No database defined, skipping')
+    		return
+    	
+    	if _engine is None:
+    		_engine = create_engine(os.environ.get('DATABASE_URL'), echo=False)
+    		_Session = sessionmaker(bind=self.engine)
+    	
+    	session = _Session()
+    	stored_yaml = session.query(Yaml).first()
+    	
+    	with open(path, 'r') as infile:
+    		newYaml = infile.read()
+    		if stored_yaml is None:
+    			stored_yaml = Yaml()
+    			session.add(stored_yaml)
+    		stored_yaml.text = newYaml
+    		session.commit()
 
 _config_file_name = 'eve_buddy_link_bot_config.yaml'
 _config = readYamlFile(_config_file_name)
