@@ -23,10 +23,28 @@ requests_log.setLevel(logging.WARNING)
 _sleeptime = 60
 _engine = None
 _Session = None
+if os.environ.get('DATABASE_URL') is not None:
+	logging.info('Using database URL ' + os.environ.get('DATABASE_URL'))
+	_engine = create_engine(os.environ.get('DATABASE_URL'), echo=False)
+	_Session = sessionmaker(bind=_engine)
+else:
+	logging.info('No database defined, skipping')
 
 def readYamlFile(path):
     with open(path, 'r') as infile:
         return yaml.load(infile)
+
+def readYamlDatabaseToFile(path):
+	if _engine is None:
+		return
+
+	session = _Session()
+	stored_yaml = session.query(Yaml).first()
+	if stored_yaml is not None:
+		logging.info('restoring from database')
+		with open(path, 'w') as outfile:
+			outfile.write( stored_yaml.text)
+
 
 def writeYamlFile(yaml_object, path):
         with open(path, 'w') as outfile:
@@ -35,12 +53,10 @@ def writeYamlFile(yaml_object, path):
 
 def writeYamlDatabase(path):
     	if os.environ.get('DATABASE_URL') is None:
-    		logging.info('No database defined, skipping')
+    		logging.debug('No database defined, skipping')
     		return
-    	
-    	if _engine is None:
-    		_engine = create_engine(os.environ.get('DATABASE_URL'), echo=False)
-    		_Session = sessionmaker(bind=self.engine)
+    	else:
+    		logging.debug('writing to database')
     	
     	session = _Session()
     	stored_yaml = session.query(Yaml).first()
@@ -55,8 +71,11 @@ def writeYamlDatabase(path):
 
 _config_file_name = 'eve_buddy_link_bot_config.yaml'
 _config = readYamlFile(_config_file_name)
+
 _links_file_name = 'eve_buddy_link_bot_links.yaml'
+readYamlDatabaseToFile(_links_file_name)
 _links = readYamlFile(_links_file_name)
+
 _api_header = _config['api_header']
 _username = os.environ.get('BUDDY_BOT_USER_NAME', _config['username'])
 _password = os.environ.get('BUDDY_BOT_PASSWORD', _config['password'])
@@ -70,6 +89,7 @@ _once = os.environ.get('BUDDY_BOT_RUN_ONCE', 'False') == 'True'
 def main():
     global _last_daily_job
     sleeptime = _sleeptime
+    
     r = praw.Reddit(_api_header)
     r.login(_username, _password)
     #r.config.decode_html_entities = True
@@ -177,7 +197,7 @@ def scan_messages(session):
         
         _links[type].append({
             'username': author,
-            'url': body,
+            'url': body.strip(),
             'added': datetime.now()
         })
         writeYamlFile(_links, _links_file_name)
