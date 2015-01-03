@@ -80,7 +80,7 @@ _api_header = _config['api_header']
 _username = os.environ.get('BUDDY_BOT_USER_NAME', _config['username'])
 _password = os.environ.get('BUDDY_BOT_PASSWORD', _config['password'])
 _enabled = _config['enabled']
-_sleeptime = _config['sleep_time']
+_sleeptime = int(os.environ.get('BUDDY_BOT_SLEEP_TIME', _config['sleep_time']))
 _signature = _config['signature']
 _home_subreddit = _config['home_subreddit']
 _last_daily_job = datetime.now() + relativedelta( days = -2 )
