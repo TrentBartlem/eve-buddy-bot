@@ -58,16 +58,19 @@ def writeYamlDatabase(path):
     	else:
     		logging.debug('writing to database')
     	
-    	session = _Session()
-    	stored_yaml = session.query(Yaml).first()
-    	
-    	with open(path, 'r') as infile:
-    		newYaml = infile.read()
-    		if stored_yaml is None:
-    			stored_yaml = Yaml()
-    			session.add(stored_yaml)
-    		stored_yaml.text = newYaml
-    		session.commit()
+    	try:
+    		session = _Session()
+    		stored_yaml = session.query(Yaml).first()
+    		
+    		with open(path, 'r') as infile:
+    			newYaml = infile.read()
+    			if stored_yaml is None:
+    				stored_yaml = Yaml()
+    				session.add(stored_yaml)
+    			stored_yaml.text = newYaml
+    			session.commit()
+    	except sqlalchemy.exc.OperationalError as e:
+			logging.warn(str(e))
 
 _config_file_name = 'eve_buddy_link_bot_config.yaml'
 _config = readYamlFile(_config_file_name)
