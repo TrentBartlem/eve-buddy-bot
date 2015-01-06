@@ -12,6 +12,7 @@ from datetime   import datetime
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 from eve_buddy_link_bot_classes import Base, Yaml
 
 logging.basicConfig(format='%(asctime)s %(message)s',
@@ -69,7 +70,7 @@ def writeYamlDatabase(path):
     				session.add(stored_yaml)
     			stored_yaml.text = newYaml
     			session.commit()
-    	except sqlalchemy.exc.OperationalError as e:
+    	except OperationalError as e:
 			logging.warn(str(e))
 
 _config_file_name = 'eve_buddy_link_bot_config.yaml'
