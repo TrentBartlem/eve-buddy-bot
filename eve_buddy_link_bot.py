@@ -171,7 +171,7 @@ def get_link_type(text):
 
 def scan_messages(session):
     unread = [message for message in session.get_unread() if message.was_comment == False 
-                and message.subject in ('add trial', 'add recall')]
+                and message.subject in ('add trial', 'add recall', 'remove trial', 'remove recall')]
     for message in unread:
         time.sleep(2)
         if (message.author is None):
@@ -181,33 +181,51 @@ def scan_messages(session):
         body = str(message.body).replace('&amp;', '&') # minimal decoding
         if(subject == "add recall"):
             type = 'recall'
+            action = 'add'
             valid = body.startswith('https://secure.eveonline.com/RecallProgram/?invc=')
+        elif(subject == "remove recall"):
+            type = 'recall'
+            action = 'remove'
+        elif(subject == "remove trial"):
+            type = 'trial'
+            action = 'remove'
         else:
             type = 'trial'
+            action = 'add'
             valid = body.startswith('https://secure.eveonline.com/trial/?invc=')
-        
-        if (not valid):
-            message.reply('your ' + type +' link was invalid soz. Send ONLY the link in the body of the message. No other text. Please try again.')
-            logging.info('discarded invalid ' + type + ' message from ' + author)
-            message.mark_as_read()
-            continue
-        
-        is_duplicate = [link for link in _links[type] if link['url'] == body or link['username'] == author]
-        if (is_duplicate):
-            message.reply('You already have a ' + type + ' link. Get out.')
-            logging.info('discarded duplicate ' + type + ' message from ' + author)
-            message.mark_as_read()
-            continue
-        
-        _links[type].append({
-            'username': author,
-            'url': body.strip(),
-            'added': datetime.now()
-        })
-        writeYamlFile(_links, _links_file_name)
-        message.reply('added a ' + type + ' link for you kthxbye.')
-        logging.info('added a ' + type + ' link for ' + author)
-        
+        if (action == 'add'):
+        	if (not valid):
+        	    message.reply('your ' + type +' link was invalid soz. Send ONLY the link in the body of the message. No other text. Please try again.')
+        	    logging.info('discarded invalid ' + type + ' message from ' + author)
+        	    message.mark_as_read()
+        	    continue
+        	
+        	is_duplicate = [link for link in _links[type] if link['url'] == body or link['username'] == author]
+        	if (is_duplicate):
+        	    message.reply('You already have a ' + type + ' link. Get out.')
+        	    logging.info('discarded duplicate ' + type + ' message from ' + author)
+        	    message.mark_as_read()
+        	    continue
+        	
+        	_links[type].append({
+        	    'username': author,
+        	    'url': body.strip(),
+        	    'added': datetime.now()
+        	})
+        	writeYamlFile(_links, _links_file_name)
+        	message.reply('added a ' + type + ' link for you kthxbye.')
+        	logging.info('added a ' + type + ' link for ' + author)
+        elif (action == 'remove'):
+        	existingLinks = [link for link in _links[type] if link['username'] == author]
+        	if (not existingLinks):
+        		message.reply('You don\'t even have one of those links.')
+        		logging.info('discarded invalid ' + type + ' removal message from ' + author)
+        	else:
+        		for existing in existingLinks[:]:
+        			_links[type].remove(existing)
+        		writeYamlFile(_links, _links_file_name)
+        		message.reply('removed your ' + type + ' link kthxbye.')
+        		logging.info('removed a ' + type + ' link for ' + author)
         message.mark_as_read()
 
 def scan_threads(session):
