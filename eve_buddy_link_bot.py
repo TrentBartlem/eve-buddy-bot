@@ -13,6 +13,7 @@ from dateutil.relativedelta import relativedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
+from requests.exceptions import HTTPError
 from eve_buddy_link_bot_classes import Base, Yaml
 
 logging.basicConfig(format='%(asctime)s %(message)s',
@@ -106,6 +107,7 @@ def main():
                 print_followed_subreddits(r)
                 purge_old_providers(r)
                 purge_banned_users(r)
+                purge_deleted_users(r)
                 _last_daily_job = datetime.now()
             
             scan_messages(r)
@@ -427,6 +429,31 @@ def purge_old_providers(session):
     expiration_threshold = datetime.now() + relativedelta( months = -3)
     for key in _config['links'].keys():
         purge_old_providers_of_type(session, key, expiration_threshold)
+
+def purge_deleted_users(session):
+	for key in _config['links'].keys():
+		purge_deleted_users_of_type(session, key)
+
+def purge_deleted_users_of_type(session, key):
+	logging.info('purging deleted ' + key + ' providers')
+	if _links[key]:
+		deleted_usernames = []
+		for provider in _links[key]:
+			try:
+				session.get_redditor(provider['username'])
+				time.sleep(0.5)
+			except HTTPError as e:
+				if (e.response.status_code == 404):
+					deleted_usernames.append(provider['username'])
+				
+				
+		deleted_providers = [provider for provider in _links[key] if provider['username'] in deleted_usernames]
+		for deleted_provider in deleted_providers[:]:
+		    deleted_username = deleted_provider['username']
+		    logging.info('\tdetected ' + key + ' link from deleted user ' + deleted_username)
+		    _links[key].remove(deleted_provider)
+		    writeYamlFile(_links, _links_file_name)
+		    time.sleep(2)
 
 def purge_banned_users(session):
 	for key in _config['links'].keys():
