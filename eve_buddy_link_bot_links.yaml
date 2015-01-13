@@ -120,9 +120,6 @@ trial:
 - added: 2014-11-16 09:06:37.711303
   url: https://secure.eveonline.com/trial/?invc=01c8ddce-0586-4a49-bc42-f41394cb1ea0&action=buddy
   username: Adamman62
-- added: 2014-11-16 09:06:43.068184
-  url: https://secure.eveonline.com/trial/?invc=483bf033-b85e-4d10-9969-c3ec7e76c10a&action=buddy
-  username: Grookshank
 - added: 2014-11-16 09:06:48.604039
   url: https://secure.eveonline.com/trial/?invc=c0a7ff2e-d99c-4148-b748-139c828df9d0&action=buddy
   username: theflyingcheese
@@ -999,9 +996,6 @@ trial:
 - added: 2015-01-06 14:25:40.465736
   url: https://secure.eveonline.com/trial/?invc=081a1ed8-2e1c-48b5-8c05-8396b03912e4&action=buddy
   username: Raptros
-- added: 2015-01-08 22:14:42.544907
-  url: https://secure.eveonline.com/trial/?invc=d4513ea1-7716-470a-8c8f-a9eb0fa1cae8&action=buddy
-  username: SerpentineLogic
 - added: 2015-01-09 11:43:06.689749
   url: https://secure.eveonline.com/trial/?invc=14b185e0-f0d7-4fba-b559-e4a38c681077&action=buddy
   username: jon_magne
@@ -1014,3 +1008,6 @@ trial:
 - added: 2015-01-13 09:43:05.474634
   url: https://secure.eveonline.com/trial/?invc=f5a7d7ad-7771-48e1-94f8-0b2e86068024&action=buddy
   username: taxloss
+- added: 2015-01-13 22:51:17.704462
+  url: https://secure.eveonline.com/trial/?invc=d4513ea1-7716-470a-8c8f-a9eb0fa1cae8&action=buddy
+  username: SerpentineLogic

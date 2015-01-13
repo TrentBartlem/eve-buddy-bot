@@ -105,6 +105,7 @@ def main():
                 # put jobs here, e.g. clearing out old links
                 print_followed_subreddits(r)
                 purge_old_providers(r)
+                purge_banned_users(r)
                 _last_daily_job = datetime.now()
             
             scan_messages(r)
@@ -194,6 +195,13 @@ def scan_messages(session):
             action = 'add'
             valid = body.startswith('https://secure.eveonline.com/trial/?invc=')
         if (action == 'add'):
+        	is_banned = author in [banned.name for banned in session.get_banned(_home_subreddit)]
+        	if (is_banned):
+        		message.reply('You are banned. Get out.')
+        		logging.info('discarded ' + type + ' message from banned user ' + author)
+        		message.mark_as_read()
+        		continue
+        	
         	if (not valid):
         	    message.reply('your ' + type +' link was invalid soz. Send ONLY the link in the body of the message. No other text. Please try again.')
         	    logging.info('discarded invalid ' + type + ' message from ' + author)
@@ -419,6 +427,22 @@ def purge_old_providers(session):
     expiration_threshold = datetime.now() + relativedelta( months = -3)
     for key in _config['links'].keys():
         purge_old_providers_of_type(session, key, expiration_threshold)
+
+def purge_banned_users(session):
+	for key in _config['links'].keys():
+		purge_banned_users_of_type(session, key)
+
+def purge_banned_users_of_type(session, key):
+	logging.info('purging banned ' + key + ' providers')
+	if _links[key]:
+		banned_usernames = [banned.name for banned in session.get_banned(_home_subreddit)]
+		banned_providers = [provider for provider in _links[key] if provider['username'] in banned_usernames]
+		for banned_provider in banned_providers[:]:
+		    banned_username = banned_provider['username']
+		    logging.info('\tdetected ' + key + ' link from banned user ' + banned_username)
+		    _links[key].remove(banned_provider)
+		    writeYamlFile(_links, _links_file_name)
+		    time.sleep(2)
 
 def purge_old_providers_of_type(session, key, expiration_threshold):
     logging.info('purging old ' + key + ' providers')
