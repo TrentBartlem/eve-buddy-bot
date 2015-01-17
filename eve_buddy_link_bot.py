@@ -237,8 +237,10 @@ def scan_messages(session):
                 continue
             flair_text = 'eve: ' + body
             set_flair_text(session, author, flair_text)
+            message.mark_as_read()
             message.reply('Flair set to \n\n    ' + flair_text + '\n\nkthxbye.')
             logging.info('Set flair to ' + flair_text + ' for ' + author)
+            
             
         elif (action == 'remove'):
             existingLinks = [link for link in _links[type] if link['username'] == author]
