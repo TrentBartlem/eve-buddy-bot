@@ -105,9 +105,9 @@ def main():
             if (should_do_daily_jobs()):
                 # put jobs here, e.g. clearing out old links
                 print_followed_subreddits(r)
+                purge_deleted_users(r)
                 purge_old_providers(r)
                 purge_banned_users(r)
-                purge_deleted_users(r)
                 _last_daily_job = datetime.now()
             
             scan_messages(r)
