@@ -174,7 +174,7 @@ def get_link_type(text):
 
 def scan_messages(session):
     unread = [message for message in session.get_unread() if message.was_comment == False 
-                and message.subject in ('add trial', 'add recall', 'remove trial', 'remove recall')]
+                and message.subject in ('add trial', 'add recall', 'remove trial', 'remove recall', 'set flair')]
     for message in unread:
         time.sleep(2)
         if (message.author is None):
@@ -232,22 +232,24 @@ def scan_messages(session):
             is_banned = author in [banned.name for banned in session.get_banned(_home_subreddit)]
             if (is_banned):
                 message.reply('You are banned. Get out.')
-                logging.info('discarded ' + type + ' message from banned user ' + author)
+                logging.info('Discarded ' + type + ' message from banned user ' + author)
                 message.mark_as_read()
                 continue
-            set_flair_text(session, username, 'eve: ' + body)
+            flair_text = 'eve: ' + body
+            set_flair_text(session, username, flair_text)
+            message.reply('Set your flair to \n\n    ' + flair_text + '\n\nkthxbye.')
             
         elif (action == 'remove'):
             existingLinks = [link for link in _links[type] if link['username'] == author]
             if (not existingLinks):
                 message.reply('You don\'t even have one of those links.')
-                logging.info('discarded invalid ' + type + ' removal message from ' + author)
+                logging.info('Discarded invalid ' + type + ' removal message from ' + author)
             else:
                 for existing in existingLinks[:]:
                     _links[type].remove(existing)
                 writeYamlFile(_links, _links_file_name)
-                message.reply('removed your ' + type + ' link kthxbye.')
-                logging.info('removed a ' + type + ' link for ' + author)
+                message.reply('Removed your ' + type + ' link kthxbye.')
+                logging.info('Removed a ' + type + ' link for ' + author)
         message.mark_as_read()
 
 def scan_threads(session):
