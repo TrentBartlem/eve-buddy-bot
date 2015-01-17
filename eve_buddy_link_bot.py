@@ -228,7 +228,7 @@ def scan_messages(session):
             writeYamlFile(_links, _links_file_name)
             message.reply('added a ' + type + ' link for you kthxbye.')
             logging.info('added a ' + type + ' link for ' + author)
-        elif (action == 'flair'):
+        elif (type == 'flair'):
             is_banned = author in [banned.name for banned in session.get_banned(_home_subreddit)]
             if (is_banned):
                 message.reply('You are banned. Get out.')
@@ -236,8 +236,9 @@ def scan_messages(session):
                 message.mark_as_read()
                 continue
             flair_text = 'eve: ' + body
-            set_flair_text(session, username, flair_text)
-            message.reply('Set your flair to \n\n    ' + flair_text + '\n\nkthxbye.')
+            set_flair_text(session, author, flair_text)
+            message.reply('Flair set to \n\n    ' + flair_text + '\n\nkthxbye.')
+            logging.info('Set flair to ' + flair_text + ' for ' + author)
             
         elif (action == 'remove'):
             existingLinks = [link for link in _links[type] if link['username'] == author]
