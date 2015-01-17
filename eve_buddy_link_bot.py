@@ -26,26 +26,26 @@ _sleeptime = 60
 _engine = None
 _Session = None
 if os.environ.get('DATABASE_URL') is not None:
-	logging.info('Using database URL ' + os.environ.get('DATABASE_URL'))
-	_engine = create_engine(os.environ.get('DATABASE_URL'), echo=False)
-	_Session = sessionmaker(bind=_engine)
+    logging.info('Using database URL ' + os.environ.get('DATABASE_URL'))
+    _engine = create_engine(os.environ.get('DATABASE_URL'), echo=False)
+    _Session = sessionmaker(bind=_engine)
 else:
-	logging.info('No database defined, skipping')
+    logging.info('No database defined, skipping')
 
 def readYamlFile(path):
     with open(path, 'r') as infile:
         return yaml.load(infile)
 
 def readYamlDatabaseToFile(path):
-	if _engine is None:
-		return
+    if _engine is None:
+        return
 
-	session = _Session()
-	stored_yaml = session.query(Yaml).first()
-	if stored_yaml is not None:
-		logging.info('restoring from database')
-		with open(path, 'w') as outfile:
-			outfile.write( stored_yaml.text)
+    session = _Session()
+    stored_yaml = session.query(Yaml).first()
+    if stored_yaml is not None:
+        logging.info('restoring from database')
+        with open(path, 'w') as outfile:
+            outfile.write( stored_yaml.text)
 
 
 def writeYamlFile(yaml_object, path):
@@ -54,25 +54,25 @@ def writeYamlFile(yaml_object, path):
         writeYamlDatabase(path)
 
 def writeYamlDatabase(path):
-    	if os.environ.get('DATABASE_URL') is None:
-    		logging.debug('No database defined, skipping')
-    		return
-    	else:
-    		logging.debug('writing to database')
-    	
-    	try:
-    		session = _Session()
-    		stored_yaml = session.query(Yaml).first()
-    		
-    		with open(path, 'r') as infile:
-    			newYaml = infile.read()
-    			if stored_yaml is None:
-    				stored_yaml = Yaml()
-    				session.add(stored_yaml)
-    			stored_yaml.text = newYaml
-    			session.commit()
-    	except OperationalError as e:
-			logging.warn(str(e))
+        if os.environ.get('DATABASE_URL') is None:
+            logging.debug('No database defined, skipping')
+            return
+        else:
+            logging.debug('writing to database')
+        
+        try:
+            session = _Session()
+            stored_yaml = session.query(Yaml).first()
+            
+            with open(path, 'r') as infile:
+                newYaml = infile.read()
+                if stored_yaml is None:
+                    stored_yaml = Yaml()
+                    session.add(stored_yaml)
+                stored_yaml.text = newYaml
+                session.commit()
+        except OperationalError as e:
+            logging.warn(str(e))
 
 _config_file_name = 'eve_buddy_link_bot_config.yaml'
 _config = readYamlFile(_config_file_name)
@@ -128,8 +128,8 @@ def main():
             else:
                 exitexception(e)
         if (_once):
-        	logging.info('running once') 
-        	break
+            logging.info('running once') 
+            break
         if (sleeptime > (_sleeptime)):
             logging.info("Sleeping for %s seconds", str(sleeptime))
         else:
@@ -192,50 +192,62 @@ def scan_messages(session):
         elif(subject == "remove trial"):
             type = 'trial'
             action = 'remove'
+        elif(subject == "set flair"):
+            type = 'flair'
+            action = 'set'
         else:
             type = 'trial'
             action = 'add'
             valid = body.startswith('https://secure.eveonline.com/trial/?invc=')
         if (action == 'add'):
-        	is_banned = author in [banned.name for banned in session.get_banned(_home_subreddit)]
-        	if (is_banned):
-        		message.reply('You are banned. Get out.')
-        		logging.info('discarded ' + type + ' message from banned user ' + author)
-        		message.mark_as_read()
-        		continue
-        	
-        	if (not valid):
-        	    message.reply('your ' + type +' link was invalid soz. Send ONLY the link in the body of the message. No other text. Please try again.')
-        	    logging.info('discarded invalid ' + type + ' message from ' + author)
-        	    message.mark_as_read()
-        	    continue
-        	
-        	is_duplicate = [link for link in _links[type] if link['url'] == body or link['username'] == author]
-        	if (is_duplicate):
-        	    message.reply('You already have a ' + type + ' link. Get out.')
-        	    logging.info('discarded duplicate ' + type + ' message from ' + author)
-        	    message.mark_as_read()
-        	    continue
-        	
-        	_links[type].append({
-        	    'username': author,
-        	    'url': body.strip(),
-        	    'added': datetime.now()
-        	})
-        	writeYamlFile(_links, _links_file_name)
-        	message.reply('added a ' + type + ' link for you kthxbye.')
-        	logging.info('added a ' + type + ' link for ' + author)
+            is_banned = author in [banned.name for banned in session.get_banned(_home_subreddit)]
+            if (is_banned):
+                message.reply('You are banned. Get out.')
+                logging.info('discarded ' + type + ' message from banned user ' + author)
+                message.mark_as_read()
+                continue
+            
+            if (not valid):
+                message.reply('your ' + type +' link was invalid soz. Send ONLY the link in the body of the message. No other text. Please try again.')
+                logging.info('discarded invalid ' + type + ' message from ' + author)
+                message.mark_as_read()
+                continue
+            
+            is_duplicate = [link for link in _links[type] if link['url'] == body or link['username'] == author]
+            if (is_duplicate):
+                message.reply('You already have a ' + type + ' link. Get out.')
+                logging.info('discarded duplicate ' + type + ' message from ' + author)
+                message.mark_as_read()
+                continue
+            
+            _links[type].append({
+                'username': author,
+                'url': body.strip(),
+                'added': datetime.now()
+            })
+            writeYamlFile(_links, _links_file_name)
+            message.reply('added a ' + type + ' link for you kthxbye.')
+            logging.info('added a ' + type + ' link for ' + author)
+        elif (action == 'flair'):
+            is_banned = author in [banned.name for banned in session.get_banned(_home_subreddit)]
+            if (is_banned):
+                message.reply('You are banned. Get out.')
+                logging.info('discarded ' + type + ' message from banned user ' + author)
+                message.mark_as_read()
+                continue
+            set_flair_text(session, username, 'eve: ' + body)
+            
         elif (action == 'remove'):
-        	existingLinks = [link for link in _links[type] if link['username'] == author]
-        	if (not existingLinks):
-        		message.reply('You don\'t even have one of those links.')
-        		logging.info('discarded invalid ' + type + ' removal message from ' + author)
-        	else:
-        		for existing in existingLinks[:]:
-        			_links[type].remove(existing)
-        		writeYamlFile(_links, _links_file_name)
-        		message.reply('removed your ' + type + ' link kthxbye.')
-        		logging.info('removed a ' + type + ' link for ' + author)
+            existingLinks = [link for link in _links[type] if link['username'] == author]
+            if (not existingLinks):
+                message.reply('You don\'t even have one of those links.')
+                logging.info('discarded invalid ' + type + ' removal message from ' + author)
+            else:
+                for existing in existingLinks[:]:
+                    _links[type].remove(existing)
+                writeYamlFile(_links, _links_file_name)
+                message.reply('removed your ' + type + ' link kthxbye.')
+                logging.info('removed a ' + type + ' link for ' + author)
         message.mark_as_read()
 
 def scan_threads(session):
@@ -431,45 +443,46 @@ def purge_old_providers(session):
         purge_old_providers_of_type(session, key, expiration_threshold)
 
 def purge_deleted_users(session):
-	for key in _config['links'].keys():
-		purge_deleted_users_of_type(session, key)
+    for key in _config['links'].keys():
+        purge_deleted_users_of_type(session, key)
 
 def purge_deleted_users_of_type(session, key):
-	logging.info('purging deleted ' + key + ' providers')
-	if _links[key]:
-		deleted_usernames = []
-		for provider in _links[key]:
-			try:
-				session.get_redditor(provider['username'])
-				time.sleep(0.5)
-			except HTTPError as e:
-				if (e.response.status_code == 404):
-					deleted_usernames.append(provider['username'])
-				
-				
-		deleted_providers = [provider for provider in _links[key] if provider['username'] in deleted_usernames]
-		for deleted_provider in deleted_providers[:]:
-		    deleted_username = deleted_provider['username']
-		    logging.info('\tdetected ' + key + ' link from deleted user ' + deleted_username)
-		    _links[key].remove(deleted_provider)
-		    writeYamlFile(_links, _links_file_name)
-		    time.sleep(2)
+    logging.info('purging deleted ' + key + ' providers')
+    if _links[key]:
+        deleted_usernames = []
+        for provider in _links[key]:
+            try:
+                session.get_redditor(provider['username'])
+                time.sleep(0.5)
+            except HTTPError as e:
+                if (e.response.status_code == 404):
+                    deleted_usernames.append(provider['username'])
+                
+                
+        deleted_providers = [provider for provider in _links[key] if provider['username'] in deleted_usernames]
+        for deleted_provider in deleted_providers[:]:
+            deleted_username = deleted_provider['username']
+            logging.info('\tdetected ' + key + ' link from deleted user ' + deleted_username)
+            _links[key].remove(deleted_provider)
+            writeYamlFile(_links, _links_file_name)
+            time.sleep(2)
 
 def purge_banned_users(session):
-	for key in _config['links'].keys():
-		purge_banned_users_of_type(session, key)
+    for key in _config['links'].keys():
+        purge_banned_users_of_type(session, key)
 
 def purge_banned_users_of_type(session, key):
-	logging.info('purging banned ' + key + ' providers')
-	if _links[key]:
-		banned_usernames = [banned.name for banned in session.get_banned(_home_subreddit)]
-		banned_providers = [provider for provider in _links[key] if provider['username'] in banned_usernames]
-		for banned_provider in banned_providers[:]:
-		    banned_username = banned_provider['username']
-		    logging.info('\tdetected ' + key + ' link from banned user ' + banned_username)
-		    _links[key].remove(banned_provider)
-		    writeYamlFile(_links, _links_file_name)
-		    time.sleep(2)
+    logging.info('purging banned ' + key + ' providers')
+    if _links[key]:
+        banned_usernames = [banned.name for banned in session.get_banned(_home_subreddit)]
+        banned_providers = [provider for provider in _links[key] if provider['username'] in banned_usernames]
+        for banned_provider in banned_providers[:]:
+            banned_username = banned_provider['username']
+            logging.info('\tdetected ' + key + ' link from banned user ' + banned_username)
+            _links[key].remove(banned_provider)
+            set_flair_text(session, banned_username, 'BANNED USER')
+            writeYamlFile(_links, _links_file_name)
+            time.sleep(2)
 
 def purge_old_providers_of_type(session, key, expiration_threshold):
     logging.info('purging old ' + key + ' providers')
@@ -500,6 +513,10 @@ def get_flair_text(session, username):
     else:
         flair_text = flair['flair_text']
     return flair_text
+
+def set_flair_text(session, username, text):
+    session.set_flair(_home_subreddit, username, text)
+
 
 # randomly find someone who offers that type of link
 def get_link_provider(link_name):
