@@ -88,6 +88,7 @@ _enabled = _config['enabled']
 _sleeptime = int(os.environ.get('BUDDY_BOT_SLEEP_TIME', _config['sleep_time']))
 _signature = _config['signature']
 _home_subreddit = _config['home_subreddit']
+_flair_subreddit= _config['subreddit_i_have_flair_mod_access_to']
 _last_daily_job = datetime.now() + relativedelta( days = -2 )
 _once = os.environ.get('BUDDY_BOT_RUN_ONCE', 'False') == 'True'
 
@@ -451,20 +452,37 @@ def purge_deleted_users(session):
     for key in _config['links'].keys():
         purge_deleted_users_of_type(session, key)
 
+# def purge_deleted_users_of_type(session, key):
+#     logging.info('purging deleted ' + key + ' providers')
+#     if _links[key]:
+#         deleted_usernames = []
+#         for provider in _links[key]:
+#             try:
+#                 session.get_redditor(provider['username'])
+#                 time.sleep(0.5)
+#             except HTTPError as e:
+#                 if (e.response.status_code == 404):
+#                     deleted_usernames.append(provider['username'])
+#                 
+#                 
+#         deleted_providers = [provider for provider in _links[key] if provider['username'] in deleted_usernames]
+#         for deleted_provider in deleted_providers[:]:
+#             deleted_username = deleted_provider['username']
+#             logging.info('\tdetected ' + key + ' link from deleted user ' + deleted_username)
+#             _links[key].remove(deleted_provider)
+#             writeYamlFile(_links, _links_file_name)
+#             time.sleep(2)
+
+# uses praw 2.1.20+
 def purge_deleted_users_of_type(session, key):
     logging.info('purging deleted ' + key + ' providers')
+    
     if _links[key]:
-        deleted_usernames = []
-        for provider in _links[key]:
-            try:
-                session.get_redditor(provider['username'])
-                time.sleep(0.5)
-            except HTTPError as e:
-                if (e.response.status_code == 404):
-                    deleted_usernames.append(provider['username'])
-                
-                
-        deleted_providers = [provider for provider in _links[key] if provider['username'] in deleted_usernames]
+        provider_names = [provider['username'].lower() for provider in _links[key]]
+        valid_redditors = praw.helpers.valid_redditors(provider_names, session.get_subreddit(_flair_subreddit))
+        valid_names = [str(redditor.name).lower() for redditor in valid_redditors]
+        deleted_names = set(provider_names) - set(valid_names)
+        deleted_providers = [provider for provider in _links[key] if provider['username'].lower() in deleted_names]
         for deleted_provider in deleted_providers[:]:
             deleted_username = deleted_provider['username']
             logging.info('\tdetected ' + key + ' link from deleted user ' + deleted_username)
