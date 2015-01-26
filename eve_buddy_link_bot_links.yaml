@@ -3,18 +3,6 @@ trial:
 - added: 2014-10-27 20:31:00.111600
   url: https://secure.eveonline.com/trial/?invc=5d8f96b8-c0e9-48f6-a4c7-083e5df9fb7e&action=buddy
   username: flexd
-- added: 2014-10-20 18:48:37.987027
-  url: https://secure.eveonline.com/trial/?invc=604fa270-4f9d-4f9c-9c2d-ddbdfe2274a9&action=buddy
-  username: Harknano
-- added: 2014-10-22 16:51:29.776430
-  url: https://secure.eveonline.com/trial/?invc=1079c7d3-3086-4edb-a7c6-6e88c2bcf04e&action=buddy
-  username: Foxy_Valerii
-- added: 2014-10-22 16:55:54.024978
-  url: https://secure.eveonline.com/trial/?invc=a9e5f55c-df4c-494c-b5b6-ad030a9da2c1&action=buddy
-  username: StratOCE
-- added: 2014-10-26 04:14:30.239880
-  url: https://secure.eveonline.com/trial/?invc=542ebdb0-501c-471c-baf4-b567fad7cab5&action=buddy
-  username: MiG_Interceptor
 - added: 2014-10-26 16:44:07.536842
   url: https://secure.eveonline.com/trial/?invc=952e4cba-5aef-4495-9a37-4cd98d5019c3&action=buddy
   username: ThePiachu
@@ -960,9 +948,6 @@ trial:
 - added: 2015-01-06 14:25:40.465736
   url: https://secure.eveonline.com/trial/?invc=081a1ed8-2e1c-48b5-8c05-8396b03912e4&action=buddy
   username: Raptros
-- added: 2015-01-09 11:43:06.689749
-  url: https://secure.eveonline.com/trial/?invc=14b185e0-f0d7-4fba-b559-e4a38c681077&action=buddy
-  username: jon_magne
 - added: 2015-01-11 12:28:33.741066
   url: https://secure.eveonline.com/trial/?invc=dfd95fc3-cfe8-4f8b-a580-5a5250a4c88c&action=buddy
   username: uTorrent
@@ -1002,3 +987,57 @@ trial:
 - added: 2015-01-17 07:27:29.746838
   url: https://secure.eveonline.com/trial/?invc=e4ac45eb-d3b4-450c-8da5-4d5c23d4444f&action=buddy
   username: HTL2001
+- added: 2015-01-18 13:34:02.968049
+  url: https://secure.eveonline.com/trial/?invc=9a9811bd-d81b-4b99-a4c8-de3b435eb0ce&action=buddy
+  username: IvivAitylin
+- added: 2015-01-19 00:56:07.280952
+  url: https://secure.eveonline.com/trial/?invc=ac864cc6-2d67-408e-be14-b75ba5adb7f8&action=buddy
+  username: Speshtard
+- added: 2015-01-19 03:48:04.492714
+  url: https://secure.eveonline.com/trial/?invc=3f2114dc-a56f-4b6e-8582-b45716b28e75&action=buddy
+  username: RandyNewmanShoe
+- added: 2015-01-19 23:32:26.381337
+  url: https://secure.eveonline.com/trial/?invc=4ecf1a84-841b-4cbd-a3d1-9d74b4155694&action=buddy
+  username: chinupf
+- added: 2015-01-20 21:07:43.051445
+  url: https://secure.eveonline.com/trial/?invc=604fa270-4f9d-4f9c-9c2d-ddbdfe2274a9&action=buddy
+  username: Harknano
+- added: 2015-01-21 02:59:46.074187
+  url: https://secure.eveonline.com/trial/?invc=8de544b6-869e-480c-ad54-2fa81b40c842&action=buddy
+  username: giopls
+- added: 2015-01-21 04:19:09.930191
+  url: https://secure.eveonline.com/trial/?invc=deab3038-7e9c-4aa8-92af-73f4681e194b&action=buddy
+  username: Gaeel
+- added: 2015-01-21 05:31:49.152713
+  url: https://secure.eveonline.com/trial/?invc=e71b1092-1f43-43dd-b8ea-7b348a3fda01&action=buddy
+  username: TobinRisidan
+- added: 2015-01-21 07:18:18.872156
+  url: https://secure.eveonline.com/trial/?invc=895f2134-be4b-4bd2-972d-c61da3122f3d&action=buddy
+  username: StormySan
+- added: 2015-01-22 00:12:49.334811
+  url: https://secure.eveonline.com/trial/?invc=1dd41e09-2833-45c3-a14f-1af6fea21687&action=buddy
+  username: cybertier
+- added: 2015-01-22 03:41:19.148437
+  url: https://secure.eveonline.com/trial/?invc=ddd0f597-abeb-4f06-9d73-f7f756a235f6&action=buddy
+  username: mr_throwz
+- added: 2015-01-22 04:15:29.352484
+  url: https://secure.eveonline.com/trial/?invc=c8170899-bec9-4fc5-b5d4-6139a3ddd8f8&action=buddy
+  username: Golanthanatos
+- added: 2015-01-22 20:04:28.268849
+  url: https://secure.eveonline.com/trial/?invc=a9e5f55c-df4c-494c-b5b6-ad030a9da2c1&action=buddy
+  username: StratOCE
+- added: 2015-01-23 01:03:37.339861
+  url: https://secure.eveonline.com/trial/?invc=1079c7d3-3086-4edb-a7c6-6e88c2bcf04e&action=buddy
+  username: Foxy_Valerii
+- added: 2015-01-24 12:09:21.820252
+  url: https://secure.eveonline.com/trial/?invc=f668abbc-0ff3-4aaa-b3d4-3acc2abf770a&action=buddy
+  username: Starporta
+- added: 2015-01-24 16:35:50.192555
+  url: https://secure.eveonline.com/trial/?invc=57e200da-1796-4b15-b169-c5ab3999f407&action=buddy
+  username: akariasi
+- added: 2015-01-25 02:43:12.679209
+  url: https://secure.eveonline.com/trial/?invc=613ac87d-fdbc-49e2-9f60-3c5213c6cfe4&action=buddy
+  username: JiPi00636
+- added: 2015-01-26 00:19:41.077673
+  url: https://secure.eveonline.com/trial/?invc=5a8a7aaf-9368-44fc-b8f6-c8897bb77c85&action=buddy
+  username: Dervinus
