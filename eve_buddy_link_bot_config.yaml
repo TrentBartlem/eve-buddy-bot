@@ -8,7 +8,7 @@ sleep_time: 180
 signature: "---\n[^[about]](https://www.reddit.com/r/New_Eden_Link_Bot/wiki/index) [^[Issues]](https://www.reddit.com/message/compose/?to=new_eden_link_bot&subject=Issue) [^[How&nbsp;to&nbsp;join]](https://www.reddit.com/r/New_Eden_Link_Bot/wiki/index#wiki_how_do_i_get_my_link_into_this_bot.3F) [^[Set&nbsp;flair]](https://www.reddit.com/r/New_Eden_Link_Bot/wiki/index#wiki_what.27s_this_about_flair.3F)"
 links:
   trial:
-    name: "21-day extended trial"
+    name: "30-day buddy trial"
     regexes: 
       - ".*extended trial.*"
       - ".*trial link.*"
