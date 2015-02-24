@@ -17,5 +17,5 @@ links:
   recall:
     name: "recall program"
     regexes:
-      - ".* recall link.*"
+      - ".*recall link.*"
       - ".*recall program.*"
