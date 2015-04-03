@@ -78,6 +78,7 @@ _config_file_name = 'eve_buddy_link_bot_config.yaml'
 _config = readYamlFile(_config_file_name)
 
 _links_file_name = 'eve_buddy_link_bot_links.yaml'
+#comment this line out to push changes rather than pull
 readYamlDatabaseToFile(_links_file_name)
 _links = readYamlFile(_links_file_name)
 
