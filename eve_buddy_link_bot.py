@@ -126,7 +126,7 @@ def main():
             catchable_exceptions = ["Gateway Time", "timed out", "ConnectionPool", "Connection reset", "Server Error", "try again", "Too Big", "onnection aborted"]
             if any(substring in str(e) for substring in catchable_exceptions):
                 sleeptime = round(sleeptime*2)
-                logging.debug(str(e))
+                logging.info(str(e))
             else:
                 exitexception(e)
         if (_once):
@@ -409,7 +409,7 @@ def post_reply(r, thing, text):
         except Exception as e:            
             catchable_exceptions = ["that user doesn't exist", "that comment has been deleted"]
             if any(substring in str(e) for substring in catchable_exceptions):
-                logging.debug(str(e))
+                logging.info(str(e))
                 return
             else:
                 exitexception(e)
@@ -500,7 +500,7 @@ def purge_old_providers_of_type(session, key, expiration_threshold):
             except Exception as e:            
               catchable_exceptions = ["that user doesn't exist"]
               if any(substring in str(e) for substring in catchable_exceptions):
-                logging.debug(str(e))
+                logging.info(str(e))
               else:
                 exitexception(e)
             
