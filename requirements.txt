@@ -1,5 +1,5 @@
 pyyaml
-praw>=3.1.0
+praw>=3.2.1
 python-dateutil
 sqlalchemy
 psycopg2
