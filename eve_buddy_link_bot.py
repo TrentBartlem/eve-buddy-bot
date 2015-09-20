@@ -438,7 +438,7 @@ def notify_link_removal(session, link_type, recipient, url):
     msg+='The link you have provided has expired. Links are valid for a few months '
     msg+= ' then retired, in case you are no longer playing.\n\n'
     msg+= 'You are welcome to resubmit your link in the '
-    msg+= '[usual manner](http://www.reddit.com/message/compose/?to='
+    msg+= '[usual manner](https://www.reddit.com/message/compose/?to='
     msg+= _username
     msg+= '&subject=add ' + link_type
     msg+= '&message=' + url.replace('&', '%26') + ').'
